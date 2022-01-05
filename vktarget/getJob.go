@@ -6,8 +6,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"raskrutka/all"
 )
+
+var colorRed = "\033[31m"
+var colorGreen = "\033[32m"
+var reset = "\033[0m"
+var infoLog = log.New(os.Stdout, fmt.Sprint(string(colorGreen), "INFO\t"+reset), log.Ldate|log.Ltime)
+var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset), log.Ldate|log.Ltime|log.Lshortfile)
 
 func MainVktarget(loginVK, passVK string) {
 	GetDjob(loginVK, passVK)
@@ -40,7 +47,7 @@ func GetDjob(loginVK, passVK string) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		fmt.Println(err)
+		errorLog.Println(err)
 		return
 	}
 	req.Header.Add("authority", authority)
@@ -60,21 +67,22 @@ func GetDjob(loginVK, passVK string) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		errorLog.Println(err)
 		return
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println(err)
+		errorLog.Println(err)
 		return
 	}
 	t := JobStruct{}
 	err = json.Unmarshal(body, &t)
 	if err != nil {
 		err = fmt.Errorf("ошибка парсинга боди: %v %v", err, string(body))
-		log.Fatal(err)
+		errorLog.Println(err)
+		return
 	}
 	switch t.Tasks.(type) { //Проверяем тип интерфейса. Может возвращать "tasks": [] - не задач и мапу, если задачи есть
 	case map[string]interface{}:
@@ -92,12 +100,12 @@ func GetDjob(loginVK, passVK string) {
 					typeName2 = value.(string)
 				}
 			}
-			fmt.Printf("%v %v %v\n", jobID, typeName1, typeName2)
+			infoLog.Printf("%v %v %v\n", jobID, typeName1, typeName2)
 		}
 	case []interface{}:
-		fmt.Println("Пустой список заданий")
+		errorLog.Println("Пустой список заданий")
 	default:
-		fmt.Printf("%T\n", t.Tasks)
+		errorLog.Printf("%T\n", t.Tasks)
 
 	}
 }
