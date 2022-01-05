@@ -4,33 +4,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"os"
 	"raskrutka/all"
 )
 
-var colorRed = "\033[31m"
-var colorGreen = "\033[32m"
-var reset = "\033[0m"
-var infoLog = log.New(os.Stdout, fmt.Sprint(string(colorGreen), "INFO\t"+reset), log.Ldate|log.Ltime)
-var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset), log.Ldate|log.Ltime|log.Lshortfile)
-
-func MainVktarget(loginVK, passVK string) {
-	GetDjob(loginVK, passVK)
-}
-
-//getDjob получаем список заданий
-func GetDjob(loginVK, passVK string) {
+//getDjob получаем список заданий. Возвращает список мап, ключь id задания, значение - список из 0. Имя 1. Ссылка
+func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error) {
 	site := "vktarget"
 	sessID, err := all.GetphpSessID(site)
 	if err != nil {
-		log.Fatal(err)
+		err = fmt.Errorf("ошибка получения sessID: %v", err)
+		return
 	}
 	//Делаем куку рабочей
 	err = all.GetUloginToken(loginVK, passVK, sessID, site)
 	if err != nil {
-		log.Fatal(err)
+		err = fmt.Errorf("ошибка получения токена %v", err)
+		return
 	}
 	var url string
 	var authority string
@@ -47,7 +37,6 @@ func GetDjob(loginVK, passVK string) {
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		errorLog.Println(err)
 		return
 	}
 	req.Header.Add("authority", authority)
@@ -67,21 +56,18 @@ func GetDjob(loginVK, passVK string) {
 
 	res, err := client.Do(req)
 	if err != nil {
-		errorLog.Println(err)
 		return
 	}
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		errorLog.Println(err)
 		return
 	}
 	t := JobStruct{}
 	err = json.Unmarshal(body, &t)
 	if err != nil {
 		err = fmt.Errorf("ошибка парсинга боди: %v %v", err, string(body))
-		errorLog.Println(err)
 		return
 	}
 	switch t.Tasks.(type) { //Проверяем тип интерфейса. Может возвращать "tasks": [] - не задач и мапу, если задачи есть
@@ -90,6 +76,7 @@ func GetDjob(loginVK, passVK string) {
 			var jobID string
 			var typeName1 string
 			var typeName2 string
+			jobList := make(map[string][]string)               //мапа одного задания
 			for k, value := range m.(map[string]interface{}) { //Идем по значениям в каждой задаче
 				switch k {
 				case "id":
@@ -100,13 +87,16 @@ func GetDjob(loginVK, passVK string) {
 					typeName2 = value.(string)
 				}
 			}
-			infoLog.Printf("%v %v %v\n", jobID, typeName1, typeName2)
+			jobList[jobID] = []string{fmt.Sprintf("%v %v", typeName1, typeName2)}
+			jobsList = append(jobsList, jobList)
 		}
+		return
 	case []interface{}:
-		errorLog.Println("Пустой список заданий")
+		err = fmt.Errorf("пустой список заданий")
+		return
 	default:
-		errorLog.Printf("%T\n", t.Tasks)
-
+		err = fmt.Errorf("ожидался другой тип данных в интерфейсе %T", t.Tasks)
+		return
 	}
 }
 
