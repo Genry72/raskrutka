@@ -66,6 +66,7 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 			var jobID string
 			var typeName1 string
 			var typeName2 string
+			var uri string
 			jobList := make(map[string][]string)               //мапа одного задания
 			for k, value := range m.(map[string]interface{}) { //Идем по значениям в каждой задаче
 				switch k {
@@ -75,9 +76,11 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 					typeName1 = value.(string)
 				case "type_name_link":
 					typeName2 = value.(string)
+				case "url":
+					uri = value.(string)
 				}
 			}
-			jobList[jobID] = []string{fmt.Sprintf("%v %v", typeName1, typeName2)}
+			jobList[jobID] = []string{fmt.Sprintf("%v %v", typeName1, typeName2), uri}
 			jobsList = append(jobsList, jobList)
 		}
 		return
