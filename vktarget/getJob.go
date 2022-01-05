@@ -22,35 +22,25 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 		err = fmt.Errorf("ошибка получения токена %v", err)
 		return
 	}
-	var url string
-	var authority string
-	var origin string
-	var referer string
-	switch site {
-	case "vktarget":
-		url = "https://vktarget.ru/api/all.php?action=get_list&v=1.2&offset=0"
-		authority = "vktarget.ru"
-		origin = "https://vktarget.ru"
-		referer = origin + "/list/"
-	}
+	url := "https://vktarget.ru/api/all.php?action=get_list&v=1.2&offset=0"
 	method := "POST"
 	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		return
 	}
-	req.Header.Add("authority", authority)
+	req.Header.Add("authority", "vktarget.ru")
 	req.Header.Add("content-length", "0")
 	req.Header.Add("sec-ch-ua", "\" Not A;Brand\";v=\"99\", \"Chromium\";v=\"96\", \"Google Chrome\";v=\"96\"")
 	req.Header.Add("sec-ch-ua-mobile", "?0")
 	req.Header.Add("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36")
 	req.Header.Add("sec-ch-ua-platform", "\"macOS\"")
 	req.Header.Add("accept", "*/*")
-	req.Header.Add("origin", origin)
+	req.Header.Add("origin", "https://vktarget.ru")
 	req.Header.Add("sec-fetch-site", "same-origin")
 	req.Header.Add("sec-fetch-mode", "cors")
 	req.Header.Add("sec-fetch-dest", "empty")
-	req.Header.Add("referer", referer)
+	req.Header.Add("referer", "https://vktarget.ru/list/")
 	req.Header.Add("accept-language", "ru-RU,ru;q=0.9")
 	req.Header.Add("Cookie", "PHPSESSID="+sessID)
 
