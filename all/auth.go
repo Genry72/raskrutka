@@ -12,11 +12,12 @@ import (
 	"github.com/sclevine/agouti"
 )
 
-var colorRed = "\033[31m"
+// var colorRed = "\033[31m"
 var colorGreen = "\033[32m"
 var reset = "\033[0m"
 var infoLog = log.New(os.Stdout, fmt.Sprint(string(colorGreen), "INFO\t"+reset), log.Ldate|log.Ltime)
-var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset), log.Ldate|log.Ltime|log.Lshortfile)
+
+// var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset), log.Ldate|log.Ltime|log.Lshortfile)
 
 //GetphpSessID получаем из кук phpsessid (аутентификация через соцсети)
 func GetphpSessID(site string) (sessID string, err error) {
@@ -56,7 +57,7 @@ func GetphpSessID(site string) (sessID string, err error) {
 
 //2. 3. getUloginToken Получает токен и апдейтит sessID (аутентификация через соц-сети)
 func GetUloginToken(login, pass, sessID, site string) (err error) {
-	infoLog.Printf("Выполняем получение токена Utoken для пользователя %v", login)
+	infoLog.Printf("Выполняем получение токена Utoken для пользователя %v на сайте %v", login, site)
 
 	var token string
 	// driver := agouti.PhantomJS()
@@ -151,7 +152,7 @@ func GetUloginToken(login, pass, sessID, site string) (err error) {
 	if err != nil {
 		return err
 	}
-	infoLog.Printf("Получение токена Utoken для пользователя %v выполнено", login)
+	infoLog.Printf("Получение токена Utoken для пользователя %v на сайте %v выполнено", login, site)
 	return err
 }
 
