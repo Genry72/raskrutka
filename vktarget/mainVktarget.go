@@ -15,7 +15,7 @@ var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset),
 func MainVktarget(loginVK, passVK string) {
 	jobsList, err := GetDjob(loginVK, passVK)
 	if err != nil {
-		errorLog.Println(err)
+		errorLog.Printf("Ошибка получения информации по заданиям vktarget: %v", err)
 		return
 	}
 	infoLog.Println(jobsList)

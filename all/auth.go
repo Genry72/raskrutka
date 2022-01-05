@@ -54,7 +54,7 @@ func GetphpSessID(site string) (sessID string, err error) {
 	return sessID, err
 }
 
-//2. 3. getUloginToken Получает токен и апдейтит sessID
+//2. 3. getUloginToken Получает токен и апдейтит sessID (аутентификация через соц-сети)
 func GetUloginToken(login, pass, sessID, site string) (err error) {
 	infoLog.Printf("Выполняем получение токена Utoken для пользователя %v", login)
 
