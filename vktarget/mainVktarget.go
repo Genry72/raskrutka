@@ -88,11 +88,21 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 					errorLog.Println(err)
 				}
 			case "Нажмите поделиться записью":
-				infoLog.Println("Репост")
+				object := strings.Split(value[1], "/")
+				err = vk.WallRepost(tokenVK, versionApiVK, object[1])
+				if err != nil {
+					err = fmt.Errorf("ошибка репоста %v", object[1])
+					errorLog.Println(err)
+				}
+				err = CheckJob(jobID, sessID)
+				if err != nil {
+					err = fmt.Errorf("ошибка проверки задания %v", jobID)
+					errorLog.Println(err)
+				}
 			case "Поставьте лайк на странице":
-				infoLog.Println("Лайк")
+				infoLog.Printf("Лайк %v", value[1])
 			case "Расскажите о группе":
-				infoLog.Println("Рассказать о группе")
+				infoLog.Printf("Рассказать о группе %v", value[1])
 			default:
 				err = fmt.Errorf("не известный тип задания %v", value[0])
 				errorLog.Println(err)
