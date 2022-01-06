@@ -9,6 +9,7 @@ import (
 
 //getDjob получаем список заданий. Возвращает список мап, ключь id задания, значение - список из 0. Имя 1. Ссылка
 func GetDjob(loginVK, passVK, sessID string) (jobList map[string][]string, err error) {
+	infoLog.Printf("Получаем задания для пользователя %v", loginVK)
 	url := "https://vktarget.ru/api/all.php?action=get_list&v=1.2&offset=0"
 	method := "POST"
 	client := &http.Client{}
@@ -69,6 +70,7 @@ func GetDjob(loginVK, passVK, sessID string) (jobList map[string][]string, err e
 			}
 			jobList[jobID] = []string{fmt.Sprintf("%v %v", typeName1, typeName2), uri}
 		}
+		infoLog.Printf("Получены новые задания для пользователя %v", loginVK)
 		return
 	case []interface{}:
 		err = fmt.Errorf("пустой список заданий")
