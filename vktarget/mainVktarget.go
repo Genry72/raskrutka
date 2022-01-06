@@ -91,7 +91,7 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 				object := strings.Split(value[1], "/")
 				err = vk.WallRepost(tokenVK, versionApiVK, object[1])
 				if err != nil {
-					err = fmt.Errorf("ошибка репоста %v", object[1])
+					err = fmt.Errorf("ошибка репоста %v", err)
 					errorLog.Println(err)
 				}
 				err = CheckJob(jobID, sessID)
