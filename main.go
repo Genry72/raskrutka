@@ -10,6 +10,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+var versionApiVK = "5.89"
 //Подсветка ошибок и удачных сообщений
 var colorRed = "\033[31m"
 var colorGreen = "\033[32m"
@@ -33,7 +34,7 @@ func main() {
 		return
 	}
 
-	vktarget.MainVktarget(s.LoginVK, s.PsswordVK)
+	vktarget.MainVktarget(s.LoginVK, s.PsswordVK, versionApiVK)
 }
 
 	type settingsStruct struct {
