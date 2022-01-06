@@ -82,6 +82,7 @@ func GetUloginToken(login, pass, sessID, site string) (err error) {
 	if err := page.Navigate("https://oauth.vk.com/authorize?v=5.62&client_id=3280318&scope=friends,schools,email&display=page&response_type=code&redirect_uri=https://ulogin.ru/auth.php?name=vkontakte"); err != nil {
 		return err
 	}
+	defer page.CloseWindow() //Закрываем окно влюбом случае(если ошибка, как в случае капчи)
 	_, err = page.FindByID(`install_allow`).Visible()
 	if err != nil {
 		err = fmt.Errorf("не дождались загрузки кнопки войти:%v", err)
@@ -101,6 +102,14 @@ func GetUloginToken(login, pass, sessID, site string) (err error) {
 	err = page.FindByID(`install_allow`).Submit()
 	if err != nil {
 		return err
+	}
+	body, err := page.HTML()
+	if err != nil {
+		return
+	}
+	if strings.Contains(body, "captcha.php") {
+		err = fmt.Errorf("просит капчу")
+		return
 	}
 	//Ждем прогрузки страницы. Когда появится кнопка закрыть окно
 	_, err = page.FindByXPath(`/html/body/div/button`).Visible()
