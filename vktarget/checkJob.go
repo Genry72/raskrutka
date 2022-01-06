@@ -55,11 +55,19 @@ func CheckJob(jobID, sessID string) (err error) {
 		err = fmt.Errorf("ошибка проверки задания %v %v", jobID, string(body))
 		return
 	}
-	infoLog.Printf("Задание %v выполнено корректно", jobID)
+	infoLog.Printf("Задание %v выполнено корректно: Баланс: %v", jobID, t.Balance)
 	return
 }
 
 type VktargetAnswerStruct struct {
-	Code int    `json:"code"`
-	Desc string `json:"desc"`
+	Code    int     `json:"code"`
+	Desc    string  `json:"desc"`
+	CheckID string  `json:"check_id"`
+	MoneyID string  `json:"money_id"`
+	Balance float64 `json:"balance"`
+	Timers  []struct {
+		Time     int    `json:"time"`
+		TaskName string `json:"task_name"`
+		Wtype    int    `json:"wtype"`
+	} `json:"timers"`
 }
