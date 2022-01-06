@@ -105,8 +105,10 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 				infoLog.Printf("Лайк %v", value[1])
 			case "Расскажите о группе":
 				infoLog.Printf("Рассказать о группе %v", value[1])
+			case "Посмотреть пост":
+				infoLog.Printf("Посмотреть пост %v", value[1])
 			default:
-				err = fmt.Errorf("не известный тип задания %v", value[0])
+				err = fmt.Errorf("не известный тип задания %v %v", value[0], value[1])
 				errorLog.Println(err)
 			}
 		}
