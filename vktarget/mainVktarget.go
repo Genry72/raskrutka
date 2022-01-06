@@ -147,7 +147,19 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 					errorLog.Println(err)
 				}
 			case "Расскажите о группе":
-				errorLog.Printf("Рассказать о группе %v", value[1])
+				object := strings.Split(value[1], "/")
+				err = vk.WallRepost(tokenVK, versionApiVK, object[1])
+				if err != nil {
+					err = fmt.Errorf("ошибка репоста %v", err)
+					errorLog.Println(err)
+				}
+				time.Sleep(3 * time.Second)
+				//Проверяем задание
+				err = CheckJob(jobID, sessID)
+				if err != nil {
+					err = fmt.Errorf("ошибка проверки задания %v %v", jobID, err)
+					errorLog.Println(err)
+				}
 			case "Посмотреть пост":
 				errorLog.Printf("Посмотреть пост %v", value[1])
 			default:
