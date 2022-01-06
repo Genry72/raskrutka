@@ -73,7 +73,7 @@ func GetDjob(loginVK, passVK, sessID string) (jobList map[string][]string, err e
 		infoLog.Printf("Получены новые задания для пользователя %v", loginVK)
 		return
 	case []interface{}:
-		err = fmt.Errorf("пустой список заданий")
+		//Пустой список заданий
 		return
 	default:
 		err = fmt.Errorf("ожидался другой тип данных в интерфейсе %T", t.Tasks)

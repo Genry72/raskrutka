@@ -61,8 +61,14 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 			time.Sleep(son)
 			continue
 		}
+		if len(jobList) ==0{
+			infoLog.Printf("Спим %v перед следующей проверкой, пустой список заданий", son)
+			time.Sleep(son)
+			continue
+		}
 		time.Sleep(5 * time.Second)
 		//Выполняем задания
+		infoLog.Println(jobList)
 		for jobID, value := range jobList {
 			switch value[0] { //Тип заданимя
 			case "Вступите в сообщество":
