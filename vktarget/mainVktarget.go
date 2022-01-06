@@ -61,7 +61,7 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 			time.Sleep(son)
 			continue
 		}
-		if len(jobList) ==0{
+		if len(jobList) == 0 {
 			infoLog.Printf("Спим %v перед следующей проверкой, пустой список заданий", son)
 			time.Sleep(son)
 			continue
@@ -132,6 +132,10 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 				}
 				err = vk.LikesADD(tokenVK, versionApiVK, typeObject, ownerID, itemID)
 				if err != nil {
+					//object not found - косяк сервиса
+					if strings.Contains(err.Error(), "One of the parameters specified was missing or invalid: object not found") {
+						continue
+					}
 					err = fmt.Errorf("ошибка лайка %v", err)
 					errorLog.Println(err)
 				}
