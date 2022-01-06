@@ -62,6 +62,7 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 			continue
 		}
 		time.Sleep(5 * time.Second)
+		//Выполняем задания
 		for jobID, value := range jobList {
 			switch value[0] { //Тип заданимя
 			case "Вступите в сообщество":
