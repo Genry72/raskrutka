@@ -108,7 +108,40 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 					errorLog.Println(err)
 				}
 			case "Поставьте лайк на странице":
-				infoLog.Printf("Лайк %v", value[1])
+				var typeObject string
+				var ownerID string
+				var itemID string
+				if strings.Contains(value[1], "wall") { //vk.com/wall-159659441_17825
+					typeObject = "post"
+					objects := strings.Split(value[1], "wall") //-159659441_17825
+					ids := strings.Split(objects[1], "_")
+					ownerID = ids[0]
+					itemID = ids[1]
+				}
+				if strings.Contains(value[1], "photo") { //photo689118108_457239389
+					typeObject = "photo"
+					objects := strings.Split(value[1], "photo") //689118108_457239389
+					ids := strings.Split(objects[1], "_")
+					ownerID = ids[0]
+					itemID = ids[1]
+				}
+				if typeObject == "" || ownerID == "" || itemID == "" {
+					err = fmt.Errorf("неожиданный тип для лайка %v", value[1])
+					errorLog.Println(err)
+					continue
+				}
+				err = vk.LikesADD(tokenVK, versionApiVK, typeObject, ownerID, itemID)
+				if err != nil {
+					err = fmt.Errorf("ошибка лайка %v", err)
+					errorLog.Println(err)
+				}
+				time.Sleep(3 * time.Second)
+				//Проверяем задание
+				err = CheckJob(jobID, sessID)
+				if err != nil {
+					err = fmt.Errorf("ошибка проверки задания %v %v", jobID, err)
+					errorLog.Println(err)
+				}
 			case "Расскажите о группе":
 				infoLog.Printf("Рассказать о группе %v", value[1])
 			case "Посмотреть пост":
