@@ -5,23 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"raskrutka/all"
 )
 
 //getDjob получаем список заданий. Возвращает список мап, ключь id задания, значение - список из 0. Имя 1. Ссылка
-func GetDjob(loginVK, passVK string) (jobList map[string][]string, err error) {
-	site := "vktarget"
-	sessID, err := all.GetphpSessID(site)
-	if err != nil {
-		err = fmt.Errorf("ошибка получения sessID: %v", err)
-		return
-	}
-	//Делаем куку рабочей
-	err = all.GetUloginToken(loginVK, passVK, sessID, site)
-	if err != nil {
-		err = fmt.Errorf("ошибка получения токена %v", err)
-		return
-	}
+func GetDjob(loginVK, passVK, sessID string) (jobList map[string][]string, err error) {
 	url := "https://vktarget.ru/api/all.php?action=get_list&v=1.2&offset=0"
 	method := "POST"
 	client := &http.Client{}
