@@ -84,7 +84,7 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 				//Проверяем задание
 				err = CheckJob(jobID, sessID)
 				if err != nil {
-					err = fmt.Errorf("ошибка проверки задания %v", jobID)
+					err = fmt.Errorf("ошибка проверки задания %v %v", jobID, err)
 					errorLog.Println(err)
 				}
 			case "Нажмите поделиться записью":
@@ -94,9 +94,11 @@ func MainVktarget(loginVK, passVK, versionApiVK string) {
 					err = fmt.Errorf("ошибка репоста %v", err)
 					errorLog.Println(err)
 				}
+				time.Sleep(3 * time.Second)
+				//Проверяем задание
 				err = CheckJob(jobID, sessID)
 				if err != nil {
-					err = fmt.Errorf("ошибка проверки задания %v", jobID)
+					err = fmt.Errorf("ошибка проверки задания %v %v", jobID, err)
 					errorLog.Println(err)
 				}
 			case "Поставьте лайк на странице":
