@@ -9,6 +9,7 @@ import (
 
 //GroupsGetById возвращает информацию о группе. На вход принимает id или псевдоним группы
 func GroupsGetById(groupName, token, versionApiVK string) (id, name string, err error) {
+	infoLog.Printf("Получаем id группы %v", groupName)
 	url := "https://api.vk.com/method/groups.getById?v=" + versionApiVK + "&access_token=" + token + "&group_id=" + groupName
 	method := "GET"
 	client := &http.Client{}
@@ -41,6 +42,7 @@ func GroupsGetById(groupName, token, versionApiVK string) (id, name string, err 
 	}
 	id = fmt.Sprint(s.Response[0].ID)
 	name = s.Response[0].Name
+	infoLog.Printf("id группы %v успешно получен", groupName)
 	return
 }
 
