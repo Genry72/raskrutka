@@ -11,11 +11,14 @@ import (
 )
 
 var versionApiVK = "5.89"
+
 //Подсветка ошибок и удачных сообщений
 var colorRed = "\033[31m"
-var colorGreen = "\033[32m"
+
+// var colorGreen = "\033[32m"
 var reset = "\033[0m"
-var infoLog = log.New(os.Stdout, fmt.Sprint(string(colorGreen), "INFO\t"+reset), log.Ldate|log.Ltime)
+
+// var infoLog = log.New(os.Stdout, fmt.Sprint(string(colorGreen), "INFO\t"+reset), log.Ldate|log.Ltime)
 var errorLog = log.New(os.Stderr, fmt.Sprint(string(colorRed), "ERROR\t"+reset), log.Ldate|log.Ltime|log.Lshortfile)
 
 func main() {
@@ -37,7 +40,7 @@ func main() {
 	vktarget.MainVktarget(s.LoginVK, s.PsswordVK, versionApiVK)
 }
 
-	type settingsStruct struct {
-		LoginVK   string  `yaml:"loginVK"`
-		PsswordVK string `yaml:"psswordVK"`
-	}
+type settingsStruct struct {
+	LoginVK   string `yaml:"loginVK"`
+	PsswordVK string `yaml:"psswordVK"`
+}
