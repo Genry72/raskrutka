@@ -9,7 +9,7 @@ import (
 )
 
 //getDjob получаем список заданий. Возвращает список мап, ключь id задания, значение - список из 0. Имя 1. Ссылка
-func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error) {
+func GetDjob(loginVK, passVK string) (jobList map[string][]string, err error) {
 	site := "vktarget"
 	sessID, err := all.GetphpSessID(site)
 	if err != nil {
@@ -60,6 +60,7 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 		err = fmt.Errorf("ошибка парсинга боди: %v %v", err, string(body))
 		return
 	}
+	jobList = make(map[string][]string)
 	switch t.Tasks.(type) { //Проверяем тип интерфейса. Может возвращать "tasks": [] - не задач и мапу, если задачи есть
 	case map[string]interface{}:
 		for _, m := range t.Tasks.(map[string]interface{}) { //Идим по задачам
@@ -67,7 +68,6 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 			var typeName1 string
 			var typeName2 string
 			var uri string
-			jobList := make(map[string][]string)               //мапа одного задания
 			for k, value := range m.(map[string]interface{}) { //Идем по значениям в каждой задаче
 				switch k {
 				case "id":
@@ -81,7 +81,6 @@ func GetDjob(loginVK, passVK string) (jobsList []map[string][]string, err error)
 				}
 			}
 			jobList[jobID] = []string{fmt.Sprintf("%v %v", typeName1, typeName2), uri}
-			jobsList = append(jobsList, jobList)
 		}
 		return
 	case []interface{}:
